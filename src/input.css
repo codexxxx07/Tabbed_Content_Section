@@ -195,6 +195,11 @@
 
   /* Theme toggle */
   /* Initial page load — loader & entry */
+  html.page-loading,
+  html.page-loading body {
+    overflow: hidden;
+  }
+
   .page-loader {
     @apply fixed inset-0 z-[100] flex items-center justify-center bg-gray-50;
     pointer-events: auto;

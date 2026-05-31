@@ -10,17 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./dest/output.css" />
-    <style>
-      html.page-loading,
-      html.page-loading body {
-        overflow: hidden;
-      }
-      body.page-loading > main,
-      body.page-loading > .theme-toggle {
-        opacity: 0;
-      }
-    </style>
+    <link href="./dest/output.css" rel="stylesheet" />
   </head>
   <body class="page-loading min-h-screen bg-gray-50 font-sans antialiased">
     <div
@@ -481,6 +471,6 @@
       </div>
     </div>
 
-    <script src="./script.js"></script>
+    <script src="./script.js" defer></script>
   </body>
 </html>
