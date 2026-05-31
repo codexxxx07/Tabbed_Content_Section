@@ -1,3 +1,64 @@
+(function initPageLoad() {
+  if (window.__pageLoadInit) return;
+  window.__pageLoadInit = true;
+
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  if (prefersReducedMotion) {
+    document.documentElement.classList.remove("page-loading");
+    document.body.classList.remove("page-loading");
+    document.getElementById("page-loader")?.remove();
+    return;
+  }
+
+  const MIN_MS = 800;
+  const MAX_MS = 1500;
+  const start = performance.now();
+  let done = false;
+  let resourcesReady = false;
+
+  function finish() {
+    if (done) return;
+    done = true;
+
+    const root = document.documentElement;
+    const body = document.body;
+    const loader = document.getElementById("page-loader");
+
+    root.classList.remove("page-loading");
+    body.classList.remove("page-loading");
+    body.classList.add("page-ready");
+
+    if (!loader) return;
+
+    loader.classList.add("page-loader--hide");
+    const removeLoader = () => loader.remove();
+    loader.addEventListener("transitionend", removeLoader, { once: true });
+    setTimeout(removeLoader, 400);
+  }
+
+  function tryFinish() {
+    if (done) return;
+    const elapsed = performance.now() - start;
+    if (!resourcesReady && elapsed < MAX_MS) return;
+
+    const delay = Math.max(0, MIN_MS - elapsed);
+    setTimeout(finish, delay);
+  }
+
+  window.addEventListener("load", () => {
+    resourcesReady = true;
+    tryFinish();
+  }, { once: true });
+
+  setTimeout(() => {
+    resourcesReady = true;
+    tryFinish();
+  }, MAX_MS);
+})();
+
 (function initThemeToggle() {
   const root = document.documentElement;
   const toggle = document.getElementById("theme-toggle");

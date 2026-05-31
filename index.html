@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="page-loading">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,8 +11,27 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./dest/output.css" />
+    <style>
+      html.page-loading,
+      html.page-loading body {
+        overflow: hidden;
+      }
+      body.page-loading > main,
+      body.page-loading > .theme-toggle {
+        opacity: 0;
+      }
+    </style>
   </head>
-  <body class="min-h-screen bg-gray-50 font-sans antialiased">
+  <body class="page-loading min-h-screen bg-gray-50 font-sans antialiased">
+    <div
+      id="page-loader"
+      class="page-loader"
+      role="status"
+      aria-live="polite"
+      aria-label="Loading"
+    >
+      <div class="page-loader__spinner" aria-hidden="true"></div>
+    </div>
     <button
       id="theme-toggle"
       type="button"
