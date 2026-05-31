@@ -85,21 +85,58 @@
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
+  const VALID_TABS = new Set([
+    "overview",
+    "info",
+    "features",
+    "reviews",
+    "contact",
+  ]);
+  const VALID_DOC_SECTIONS = new Set(["overview", "api", "getting-started"]);
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const MAX_NAME_LEN = 100;
+  const MAX_EMAIL_LEN = 254;
+  const MAX_MESSAGE_LEN = 2000;
+
   const tabs = document.querySelectorAll(".tab-btn");
   const panels = document.querySelectorAll(".tab-content");
   const indicator = document.getElementById("tab-indicator");
   const contentCard = document.getElementById("content-card");
 
   const TAB_TRANSITION_MS = 320;
+  const TOAST_ICON_BASE =
+    "feedback-toast-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold";
+
+  let resizeRaf = null;
+  let formSubmitting = false;
+  let trialSubmitting = false;
+
+  function isValidEmail(value) {
+    if (!value || value.length > MAX_EMAIL_LEN) return false;
+    return EMAIL_PATTERN.test(value);
+  }
+
+  function truncate(value, maxLen) {
+    return typeof value === "string" ? value.slice(0, maxLen) : "";
+  }
 
   function moveIndicator(activeTab) {
+    if (!indicator || !activeTab) return;
     indicator.style.width = `${activeTab.offsetWidth}px`;
     indicator.style.height = `${activeTab.offsetHeight}px`;
     indicator.style.transform = `translate(${activeTab.offsetLeft}px, ${activeTab.offsetTop}px)`;
   }
 
+  function getPanelForTab(tabName) {
+    if (!tabName || !VALID_TABS.has(tabName)) return null;
+    return document.querySelector(`[data-content="${CSS.escape(tabName)}"]`);
+  }
+
   function activateTab(clickedTab, { animate = true } = {}) {
+    if (!clickedTab) return;
+
     const target = clickedTab.dataset.tab;
+    if (!target || !VALID_TABS.has(target)) return;
 
     tabs.forEach((tab) => {
       tab.classList.remove("active");
@@ -114,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clickedTab.classList.add("active");
     clickedTab.setAttribute("aria-selected", "true");
 
-    const activePanel = document.querySelector(`[data-content="${target}"]`);
+    const activePanel = getPanelForTab(target);
     if (activePanel) {
       activePanel.hidden = false;
 
@@ -135,7 +172,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function switchToTab(tabName) {
-    const tab = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+    if (!tabName || !VALID_TABS.has(tabName)) return Promise.resolve(false);
+
+    const tab = document.querySelector(
+      `.tab-btn[data-tab="${CSS.escape(tabName)}"]`
+    );
     if (!tab) return Promise.resolve(false);
 
     const isAlreadyActive = tab.classList.contains("active");
@@ -181,7 +222,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   tabs.forEach((tab) => {
-    tab.addEventListener("click", () => activateTab(tab));
+    tab.addEventListener("click", () => {
+      if (tab.classList.contains("active")) return;
+      activateTab(tab);
+    });
   });
 
   const initialTab = document.querySelector(".tab-btn.active");
@@ -190,8 +234,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.addEventListener("resize", () => {
-    const current = document.querySelector(".tab-btn.active");
-    if (current) moveIndicator(current);
+    if (resizeRaf !== null) cancelAnimationFrame(resizeRaf);
+    resizeRaf = requestAnimationFrame(() => {
+      resizeRaf = null;
+      const current = document.querySelector(".tab-btn.active");
+      if (current) moveIndicator(current);
+    });
   });
 
   /* ── Documentation Drawer ── */
@@ -202,6 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const docSections = document.querySelectorAll(".doc-section");
 
   function openDocDrawer() {
+    if (!docOverlay || !docDrawer) return;
     docOverlay.classList.remove("hidden");
     docOverlay.setAttribute("aria-hidden", "false");
     requestAnimationFrame(() => {
@@ -212,6 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function closeDocDrawer() {
+    if (!docOverlay || !docDrawer) return;
     docOverlay.classList.remove("is-open");
     docDrawer.classList.remove("is-open");
     docOverlay.setAttribute("aria-hidden", "true");
@@ -222,6 +272,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function switchDocSection(sectionName) {
+    if (!sectionName || !VALID_DOC_SECTIONS.has(sectionName)) return;
+
     docNavBtns.forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.docSection === sectionName);
     });
@@ -233,17 +285,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  docCloseBtn.addEventListener("click", closeDocDrawer);
-  docOverlay.addEventListener("click", (e) => {
+  docCloseBtn?.addEventListener("click", closeDocDrawer);
+  docOverlay?.addEventListener("click", (e) => {
     if (e.target === docOverlay) closeDocDrawer();
   });
 
   docNavBtns.forEach((btn) => {
-    btn.addEventListener("click", () => switchDocSection(btn.dataset.docSection));
+    btn.addEventListener("click", () => {
+      const section = btn.dataset.docSection;
+      if (section) switchDocSection(section);
+    });
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && docOverlay.classList.contains("is-open")) {
+    if (e.key === "Escape" && docOverlay?.classList.contains("is-open")) {
       closeDocDrawer();
     }
   });
@@ -313,8 +368,10 @@ document.addEventListener("DOMContentLoaded", () => {
     feedbackToastMessage.textContent = message;
     feedbackToastIcon.textContent = type === "success" ? "✓" : "!";
     feedbackToastIcon.className =
-      "feedback-toast-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold " +
-      (type === "success" ? "feedback-toast-icon--success" : "feedback-toast-icon--error");
+      TOAST_ICON_BASE +
+      (type === "success"
+        ? " feedback-toast-icon--success"
+        : " feedback-toast-icon--error");
 
     feedbackToast.hidden = false;
     feedbackToast.classList.remove("is-hiding", "is-visible");
@@ -335,27 +392,52 @@ document.addEventListener("DOMContentLoaded", () => {
 
   contactForm?.addEventListener("submit", (e) => {
     e.preventDefault();
+    if (formSubmitting) return;
 
-    const name = contactNameInput?.value.trim() ?? "";
-    const email = contactEmailInput?.value.trim() ?? "";
-    const message = contactMessageInput?.value.trim() ?? "";
+    const name = truncate(contactNameInput?.value.trim() ?? "", MAX_NAME_LEN);
+    const email = truncate(contactEmailInput?.value.trim() ?? "", MAX_EMAIL_LEN);
+    const message = truncate(
+      contactMessageInput?.value.trim() ?? "",
+      MAX_MESSAGE_LEN
+    );
 
     if (!name || !email || !message) {
       showToast("Please fill in all required fields", "error");
       return;
     }
 
+    if (!isValidEmail(email)) {
+      showToast("Please enter a valid email address", "error");
+      return;
+    }
+
+    formSubmitting = true;
     showToast("Message sent successfully!", "success");
+    setTimeout(() => {
+      formSubmitting = false;
+    }, 600);
   });
 
   signupCta?.querySelector("button")?.addEventListener("click", () => {
-    const email = signupCta.querySelector('input[type="email"]')?.value.trim() ?? "";
+    if (trialSubmitting) return;
+
+    const emailInput = signupCta.querySelector('input[type="email"]');
+    const email = truncate(emailInput?.value.trim() ?? "", MAX_EMAIL_LEN);
 
     if (!email) {
       showToast("Please enter required details to start trial", "error");
       return;
     }
 
+    if (!isValidEmail(email)) {
+      showToast("Please enter a valid email address", "error");
+      return;
+    }
+
+    trialSubmitting = true;
     showToast("Your free trial has started!", "success");
+    setTimeout(() => {
+      trialSubmitting = false;
+    }, 600);
   });
 });
