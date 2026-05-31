@@ -11,8 +11,21 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./dest/output.css" />
+    <script>
+      if (localStorage.getItem("theme") === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
   </head>
   <body class="min-h-screen bg-gray-50 font-sans antialiased">
+    <button
+      id="theme-toggle"
+      type="button"
+      aria-label="Switch to dark mode"
+      class="theme-toggle"
+    >
+      <span id="theme-toggle-icon" aria-hidden="true">🌙</span>
+    </button>
     <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
       <!-- Header -->
       <header class="mb-10 text-center">

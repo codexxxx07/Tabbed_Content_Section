@@ -1,3 +1,29 @@
+(function initThemeToggle() {
+  const root = document.documentElement;
+  const toggle = document.getElementById("theme-toggle");
+  const icon = document.getElementById("theme-toggle-icon");
+
+  function applyTheme(isDark) {
+    root.classList.toggle("dark", isDark);
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+    if (icon) icon.textContent = isDark ? "☀️" : "🌙";
+    if (toggle) {
+      toggle.setAttribute(
+        "aria-label",
+        isDark ? "Switch to light mode" : "Switch to dark mode"
+      );
+    }
+  }
+
+  applyTheme(root.classList.contains("dark"));
+
+  toggle?.addEventListener("click", () => {
+    root.classList.add("theme-transitioning");
+    applyTheme(!root.classList.contains("dark"));
+    setTimeout(() => root.classList.remove("theme-transitioning"), 300);
+  });
+})();
+
 document.addEventListener("DOMContentLoaded", () => {
   const tabs = document.querySelectorAll(".tab-btn");
   const panels = document.querySelectorAll(".tab-content");

@@ -6,6 +6,19 @@
   html {
     scroll-behavior: smooth;
   }
+
+  body {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+    transition-duration: 300ms;
+    transition-timing-function: ease-in-out;
+  }
 }
 
 @layer components {
@@ -15,11 +28,13 @@
            transition-all duration-300 ease-in-out
            hover:bg-gray-200 hover:scale-105
            active:scale-95
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2;
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2
+           dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700
+           dark:focus-visible:ring-gray-300 dark:focus-visible:ring-offset-gray-900;
   }
 
   .tab-btn.active {
-    @apply bg-transparent text-white scale-105;
+    @apply bg-transparent text-white scale-105 dark:text-gray-900;
   }
 
   .tab-content {
@@ -136,11 +151,13 @@
 
   .doc-nav-btn {
     @apply rounded-full px-3 py-1.5 text-xs font-medium text-gray-500
-           transition-all duration-300 hover:bg-gray-100 hover:text-gray-900;
+           transition-all duration-300 hover:bg-gray-100 hover:text-gray-900
+           dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-100;
   }
 
   .doc-nav-btn.active {
-    @apply bg-gray-900 text-white hover:bg-gray-800 hover:text-white;
+    @apply bg-gray-900 text-white hover:bg-gray-800 hover:text-white
+           dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white dark:hover:text-gray-900;
   }
 
   .doc-section {
@@ -174,5 +191,181 @@
 
   .feedback-toast-icon--error {
     @apply bg-red-50 text-red-600;
+  }
+
+  /* Theme toggle */
+  .theme-toggle {
+    @apply fixed top-4 right-4 z-[70] flex h-10 w-10 items-center justify-center
+           rounded-full bg-white text-lg shadow-md
+           transition-all duration-300 ease-in-out
+           hover:scale-105 hover:shadow-lg active:scale-95
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2
+           dark:bg-gray-800 dark:shadow-gray-950/50
+           dark:focus-visible:ring-gray-300 dark:focus-visible:ring-offset-gray-900;
+  }
+
+  /* Dark mode — page & surfaces */
+  .dark body {
+    background-color: rgb(17 24 39);
+  }
+
+  .dark #tab-indicator {
+    background-color: rgb(243 244 246);
+  }
+
+  .dark .text-gray-900 {
+    color: rgb(243 244 246);
+  }
+
+  .dark .text-gray-800 {
+    color: rgb(229 231 235);
+  }
+
+  .dark .text-gray-700 {
+    color: rgb(209 213 219);
+  }
+
+  .dark .text-gray-600 {
+    color: rgb(156 163 175);
+  }
+
+  .dark .text-gray-500 {
+    color: rgb(156 163 175);
+  }
+
+  .dark .text-gray-400 {
+    color: rgb(107 114 128);
+  }
+
+  .dark .bg-white {
+    background-color: rgb(31 41 55);
+  }
+
+  .dark .bg-gray-50 {
+    background-color: rgb(31 41 55 / 0.7);
+  }
+
+  .dark .bg-gray-100 {
+    background-color: rgb(55 65 81);
+  }
+
+  .dark .shadow-lg {
+    --tw-shadow-color: rgb(3 7 18 / 0.4);
+  }
+
+  .dark .shadow-2xl {
+    --tw-shadow-color: rgb(3 7 18 / 0.6);
+  }
+
+  .dark .border-gray-100,
+  .dark .border-gray-200 {
+    border-color: rgb(55 65 81);
+  }
+
+  .dark .border-gray-300 {
+    border-color: rgb(75 85 99);
+  }
+
+  .dark .from-transparent.via-gray-200.to-transparent {
+    --tw-gradient-stops: var(--tw-gradient-from), rgb(55 65 81) var(--tw-gradient-via-position), var(--tw-gradient-to);
+  }
+
+  .dark .feature-card {
+    border-color: rgb(55 65 81);
+  }
+
+  .dark .feature-card:hover {
+    background-color: rgb(31 41 55 / 0.8);
+  }
+
+  .dark .doc-drawer {
+    background-color: rgb(17 24 39 / 0.95);
+  }
+
+  .dark .doc-overlay {
+    background-color: rgb(0 0 0 / 0.6);
+  }
+
+  .dark .feedback-toast-inner {
+    border-color: rgb(55 65 81);
+    background-color: rgb(31 41 55);
+  }
+
+  .dark .feedback-toast-icon--success {
+    background-color: rgb(6 78 59 / 0.4);
+    color: rgb(52 211 153);
+  }
+
+  .dark .feedback-toast-icon--error {
+    background-color: rgb(127 29 29 / 0.4);
+    color: rgb(248 113 113);
+  }
+
+  .dark input,
+  .dark textarea {
+    border-color: rgb(75 85 99);
+    background-color: rgb(55 65 81);
+    color: rgb(229 231 235);
+  }
+
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: rgb(107 114 128);
+  }
+
+  .dark input:focus,
+  .dark textarea:focus {
+    border-color: rgb(156 163 175);
+    --tw-ring-color: rgb(156 163 175 / 0.1);
+  }
+
+  .dark label.text-gray-700 {
+    color: rgb(209 213 219);
+  }
+
+  .dark button.rounded-full.bg-gray-900 {
+    background-color: rgb(243 244 246);
+    color: rgb(17 24 39);
+  }
+
+  .dark button.rounded-full.bg-gray-900:hover {
+    background-color: rgb(255 255 255);
+  }
+
+  .dark button.rounded-full.border.border-gray-300 {
+    border-color: rgb(75 85 99);
+    color: rgb(209 213 219);
+  }
+
+  .dark button.rounded-full.border.border-gray-300:hover {
+    background-color: rgb(55 65 81);
+  }
+
+  .dark #doc-drawer-close {
+    color: rgb(156 163 175);
+  }
+
+  .dark #doc-drawer-close:hover {
+    background-color: rgb(31 41 55);
+    color: rgb(243 244 246);
+  }
+
+  .dark .ux-highlight {
+    animation-name: ux-glow-dark;
+  }
+
+  @keyframes ux-glow-dark {
+    0% {
+      box-shadow: 0 0 0 0 rgba(243, 244, 246, 0);
+      transform: scale(1);
+    }
+    20% {
+      box-shadow: 0 0 0 3px rgba(243, 244, 246, 0.12), 0 0 24px rgba(243, 244, 246, 0.06);
+      transform: scale(1.01);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(243, 244, 246, 0);
+      transform: scale(1);
+    }
   }
 }
