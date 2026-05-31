@@ -1,0 +1,12 @@
+{
+  "name": "tabbed-content-section",
+  "version": "1.0.0",
+  "description": "Premium tabbed content section with Tailwind CSS",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./dest/output.css --minify",
+    "watch:css": "tailwindcss -i ./src/input.css -o ./dest/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}
