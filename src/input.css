@@ -29,12 +29,12 @@
            hover:bg-gray-200 hover:scale-105
            active:scale-95
            focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-900 focus-visible:ring-offset-2
-           dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700
+           dark:bg-gray-800 dark:text-black/70 dark:hover:bg-gray-700
            dark:focus-visible:ring-gray-300 dark:focus-visible:ring-offset-gray-900;
   }
 
   .tab-btn.active {
-    @apply bg-transparent text-white scale-105 dark:text-gray-900;
+    @apply bg-transparent text-white scale-105 dark:text-black;
   }
 
   .tab-content {
