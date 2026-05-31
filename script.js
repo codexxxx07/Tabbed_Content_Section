@@ -208,35 +208,68 @@ document.addEventListener("DOMContentLoaded", () => {
     }, TAB_TRANSITION_MS + 150);
   });
 
-  /* ── Popup Feedback ── */
-  const popupModal = document.getElementById("popupModal");
-  const popupMessage = document.getElementById("popupMessage");
-  const closePopupBtn = document.getElementById("closePopup");
+  /* ── Feedback Toast ── */
+  const feedbackToast = document.getElementById("feedback-toast");
+  const feedbackToastMessage = document.getElementById("feedback-toast-message");
+  const feedbackToastIcon = document.getElementById("feedback-toast-icon");
+  const contactEmailInput = document.getElementById("contact-email");
+  const contactMessageInput = document.getElementById("contact-message");
 
-  function showPopup(message) {
-    if (!popupModal || !popupMessage) return;
-    popupMessage.textContent = message;
-    popupModal.classList.remove("hidden");
-    popupModal.classList.add("flex");
+  let toastShowTimer = null;
+  let toastHideTimer = null;
+
+  function showToast(message, type = "success") {
+    if (!feedbackToast || !feedbackToastMessage || !feedbackToastIcon) return;
+
+    clearTimeout(toastShowTimer);
+    clearTimeout(toastHideTimer);
+
+    feedbackToastMessage.textContent = message;
+    feedbackToastIcon.textContent = type === "success" ? "✓" : "!";
+    feedbackToastIcon.className =
+      "feedback-toast-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold " +
+      (type === "success" ? "feedback-toast-icon--success" : "feedback-toast-icon--error");
+
+    feedbackToast.hidden = false;
+    feedbackToast.classList.remove("is-hiding", "is-visible");
+
+    requestAnimationFrame(() => {
+      feedbackToast.classList.add("is-visible");
+    });
+
+    toastShowTimer = setTimeout(() => {
+      feedbackToast.classList.remove("is-visible");
+      feedbackToast.classList.add("is-hiding");
+      toastHideTimer = setTimeout(() => {
+        feedbackToast.hidden = true;
+        feedbackToast.classList.remove("is-hiding");
+      }, 250);
+    }, 2500);
   }
-
-  function hidePopup() {
-    if (!popupModal) return;
-    popupModal.classList.add("hidden");
-    popupModal.classList.remove("flex");
-  }
-
-  closePopupBtn?.addEventListener("click", hidePopup);
-  popupModal?.addEventListener("click", (e) => {
-    if (e.target === popupModal) hidePopup();
-  });
 
   contactForm?.addEventListener("submit", (e) => {
     e.preventDefault();
-    showPopup("Message sent successfully!");
+
+    const name = contactNameInput?.value.trim() ?? "";
+    const email = contactEmailInput?.value.trim() ?? "";
+    const message = contactMessageInput?.value.trim() ?? "";
+
+    if (!name || !email || !message) {
+      showToast("Please fill in all required fields", "error");
+      return;
+    }
+
+    showToast("Message sent successfully!", "success");
   });
 
   signupCta?.querySelector("button")?.addEventListener("click", () => {
-    showPopup("Your free trial has started!");
+    const email = signupCta.querySelector('input[type="email"]')?.value.trim() ?? "";
+
+    if (!email) {
+      showToast("Please enter required details to start trial", "error");
+      return;
+    }
+
+    showToast("Your free trial has started!", "success");
   });
 });

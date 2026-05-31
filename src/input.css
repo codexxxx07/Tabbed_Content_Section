@@ -150,4 +150,29 @@
   .doc-section.active {
     @apply block opacity-100 translate-y-0;
   }
+
+  /* Feedback toast */
+  .feedback-toast {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .feedback-toast.is-visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .feedback-toast.is-hiding {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+
+  .feedback-toast-icon--success {
+    @apply bg-emerald-50 text-emerald-600;
+  }
+
+  .feedback-toast-icon--error {
+    @apply bg-red-50 text-red-600;
+  }
 }

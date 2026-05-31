@@ -435,11 +435,22 @@
       </aside>
     </div>
 
-    <!-- Popup Modal -->
-    <div id="popupModal" class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50">
-      <div class="bg-white dark:bg-gray-800 rounded-xl px-6 py-4 shadow-xl text-center max-w-sm w-full">
-        <p id="popupMessage" class="text-sm mb-4"></p>
-        <button id="closePopup" class="px-4 py-1 rounded bg-blue-500 text-white">Close</button>
+    <!-- Feedback Toast -->
+    <div
+      id="feedback-toast"
+      class="feedback-toast fixed top-1/2 left-1/2 z-[60] pointer-events-none"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    >
+      <div class="feedback-toast-inner flex max-w-sm items-start gap-3 rounded-xl border border-gray-100 bg-white px-4 py-3.5 shadow-lg pointer-events-auto">
+        <span
+          id="feedback-toast-icon"
+          class="feedback-toast-icon flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+          aria-hidden="true"
+        ></span>
+        <p id="feedback-toast-message" class="pt-1 text-sm font-medium leading-snug text-gray-800"></p>
       </div>
     </div>
 
