@@ -5,7 +5,6 @@
 
   function applyTheme(isDark) {
     root.classList.toggle("dark", isDark);
-    localStorage.setItem("theme", isDark ? "dark" : "light");
     if (icon) icon.textContent = isDark ? "☀️" : "🌙";
     if (toggle) {
       toggle.setAttribute(
@@ -15,7 +14,7 @@
     }
   }
 
-  applyTheme(root.classList.contains("dark"));
+  applyTheme(false);
 
   toggle?.addEventListener("click", () => {
     root.classList.add("theme-transitioning");
