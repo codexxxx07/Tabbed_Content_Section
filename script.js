@@ -208,8 +208,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }, TAB_TRANSITION_MS + 150);
   });
 
+  /* ── Popup Feedback ── */
+  const popupModal = document.getElementById("popupModal");
+  const popupMessage = document.getElementById("popupMessage");
+  const closePopupBtn = document.getElementById("closePopup");
+
+  function showPopup(message) {
+    if (!popupModal || !popupMessage) return;
+    popupMessage.textContent = message;
+    popupModal.classList.remove("hidden");
+    popupModal.classList.add("flex");
+  }
+
+  function hidePopup() {
+    if (!popupModal) return;
+    popupModal.classList.add("hidden");
+    popupModal.classList.remove("flex");
+  }
+
+  closePopupBtn?.addEventListener("click", hidePopup);
+  popupModal?.addEventListener("click", (e) => {
+    if (e.target === popupModal) hidePopup();
+  });
+
   contactForm?.addEventListener("submit", (e) => {
     e.preventDefault();
-    pulseHighlight(contactForm);
+    showPopup("Message sent successfully!");
+  });
+
+  signupCta?.querySelector("button")?.addEventListener("click", () => {
+    showPopup("Your free trial has started!");
   });
 });
