@@ -29,4 +29,125 @@
   .tab-content.active {
     @apply block opacity-100 translate-y-0;
   }
+
+  .tab-content.tab-enter {
+    @apply translate-y-1 opacity-0;
+  }
+
+  .tab-content.tab-enter-active {
+    @apply translate-y-0 opacity-100;
+  }
+
+  /* Section highlight pulse */
+  .ux-highlight {
+    animation: ux-glow 1.8s ease-in-out;
+  }
+
+  @keyframes ux-glow {
+    0% {
+      box-shadow: 0 0 0 0 rgba(17, 24, 39, 0);
+      transform: scale(1);
+    }
+    20% {
+      box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.15), 0 0 24px rgba(17, 24, 39, 0.08);
+      transform: scale(1.01);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(17, 24, 39, 0);
+      transform: scale(1);
+    }
+  }
+
+  /* Reveal hidden sections */
+  .ux-reveal.is-visible {
+    @apply block;
+    animation: ux-reveal-in 0.4s ease-out forwards;
+  }
+
+  @keyframes ux-reveal-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Review card entrance */
+  .review-card.review-animate {
+    animation: review-pop 0.5s ease-out forwards;
+  }
+
+  @keyframes review-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  /* Feature card stagger highlight */
+  .feature-card.feature-animate {
+    animation: feature-slide 0.45s ease-out forwards;
+  }
+
+  @keyframes feature-slide {
+    from {
+      opacity: 0.4;
+      transform: translateX(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .info-stat-card.info-animate {
+    animation: feature-slide 0.45s ease-out forwards;
+  }
+
+  /* Documentation drawer */
+  .doc-overlay {
+    @apply bg-black/40 backdrop-blur-sm;
+    transition: opacity 0.3s ease;
+  }
+
+  .doc-overlay.is-open {
+    @apply block opacity-100;
+  }
+
+  .doc-overlay:not(.is-open) {
+    opacity: 0;
+  }
+
+  .doc-drawer {
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .doc-drawer.is-open {
+    transform: translateX(0);
+  }
+
+  .doc-nav-btn {
+    @apply rounded-full px-3 py-1.5 text-xs font-medium text-gray-500
+           transition-all duration-300 hover:bg-gray-100 hover:text-gray-900;
+  }
+
+  .doc-nav-btn.active {
+    @apply bg-gray-900 text-white hover:bg-gray-800 hover:text-white;
+  }
+
+  .doc-section {
+    @apply opacity-0 translate-y-1 transition-all duration-300;
+  }
+
+  .doc-section.active {
+    @apply block opacity-100 translate-y-0;
+  }
 }
