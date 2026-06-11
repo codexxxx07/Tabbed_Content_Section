@@ -22,11 +22,9 @@ The Tabbed Content Section is a reusable UI component that enables users to navi
 
 Screenshots demonstrating different active states and content switching:
 
-- `/screenshots/overview-tab.png` — Overview panel with feature list
-- `/screenshots/features-tab.png` — Features grid with staggered animations
-- `/screenshots/contact-tab.png` — Contact form with validation feedback
-- `/screenshots/dark-mode.png` — Dark theme implementation
-- `/screenshots/mobile-view.png` — Responsive layout on mobile devices
+![Light Mode](/assets/LightMode.png)
+![Docs](/assets/Docs.png)
+![Dark Mode](/assets/DarkMode.png)
 
 ---
 
